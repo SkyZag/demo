@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Upon</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  
+    <style>/* Reset and Basic Styles */
+        body, ul, li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        /* Body Styles - Gradient Background */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #0cc0df, #ffde59);
+            color: white;
+            overflow-x: hidden; /* Prevent horizontal overflow */
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: rgba(255, 255, 255, 0.1); /* Slight transparency for header */
+            padding: 10px 0;
+            border-bottom: 1px solid #ffffff; /* White colored horizontal line */
+            animation: fadeInDown 1s ease-in-out; /* Fade-in animation for the header */
+        }
+        
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo img {
+            width: 200px; /* Adjust logo size */
+            margin-right: 10px;
+            background-color: white; /* White background */
+            border-radius: 10px; /* Rounded corners */
+            padding: 5px; /* Add some padding to separate the image from the border */
+            transition: transform 0.3s ease; /* Add smooth transition for hover effect */
+        }
+        
+        .logo img:hover {
+            transform: scale(1.1); /* Enlarge the logo on hover */
+        }
+        
+        /* Navigation Bar Styles */
+        .navbar ul {
+            display: flex;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .navbar ul li {
+            margin-right: 10px; /* Space between menu items */
+            position: relative; /* Required for positioning the hover effect */
+        }
+        
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+            transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 20px;
+        }
+        
+        .navbar ul li a:hover {
+            color: #000;
+            background-color: rgba(255, 255, 255, 0.8);
+            transform: scale(1.05);
+        }
+        
+        /* Contact Info Styles */
+        .contact-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-button {
+            background-color: #A73FE8;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid #A73FE8;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .contact-button:hover {
+            background-color: #FFFFFF;
+            color: #A73FE8;
+            transform: scale(1.1);
+        }
+        
+        /* Hero Section Styles */
+        .hero {
+            position: relative;
+            background-image: url('https://img.freepik.com/free-vector/waste-sorting-concept_74855-7934.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+            animation: fadeInUp 1.5s ease-out;
+        }
+        
+        .hero-content {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            animation: fadeInLeft 1.5s ease;
+        }
+        
+        .hero-content h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .hero-content h2:hover {
+            color: #FFD700;
+        }
+        
+        /* New styles for the highlighted text */
+        .hero-highlight {
+            text-align: center;
+            margin-top: 20px; /* Margin at the top to separate it from the hero section */
+            animation: fadeIn 2s ease; /* Fade-in animation for the highlighted text */
+        }
+        
+        .hero-highlight .highlight {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 24px;
+            transition: color 0.3s ease;
+        }
+        
+        .hero-highlight .highlight:hover {
+            color: #A73FE8;
+        }
+        
+        /* White Line Below Highlight */
+        .underline {
+            width: 60%;
+            height: 2px;
+            background-color: white;
+            margin: 20px auto 0; /* 20px space after the "Team Nirvana | 2024" text */
+        }
+/* Camera Section Styles */
+.camera-section {
+    margin: 20px auto; /* 20px space after the underline */
+    text-align: center; /* Center-align text and elements */
+}
+
+.camera-wrapper {
+    display: inline-block; /* Keep the camera wrapper inline */
+    border: 5px solid white; /* White thick border */
+    border-radius: 15px; /* Rounded corners */
+    padding: 5px; /* Space between border and video */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Optional shadow for better visibility */
+    background-color: rgba(0, 0, 0, 0.3); /* Slight background for better contrast */
+}
+
+#camera {
+    width: 100%;
+    max-width: 300px; /* Reduced maximum width of the video element */
+    border-radius: 10px; /* Rounded corners for video element */
+}
+
+#cameraButton {
+    display: block; /* Change to block for full width */
+    margin: 10px auto 0; /* Center the button and add top margin */
+    background-color: #A73FE8;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#cameraButton:hover {
+    background-color: #FFFFFF;
+    color: #A73FE8;
+}
+
+        
+        /* Quote Box Styles */
+        .quotes blockquote {
+    display: flex; /* Enable flexbox */
+    align-items: center; /* Center items vertically */
+    padding: 20px; /* Padding inside the quote box */
+    margin: 20px auto; /* Consistent gap of 20px between boxes */
+    background-color: #fff;
+    color: #333;
+    box-shadow: 
+        inset 0 -3em 3em rgba(0, 200, 0, 0.3),
+        0 0 0 2px white,
+        0.3em 0.3em 1em rgba(200, 0, 0, 0.6);
+    border-radius: 8px;
+    max-width: 300px; /* Maximum width for larger screens */
+}
+
+.quotes blockquote .status-circle {
+    margin-right: 10px; /* Space between the circle and the text */
+}
+   
+        /* New Section for White Line and MAP Heading */
+        .quotes-footer {
+            text-align: center; /* Center align footer elements */
+            margin: 20px 0; /* 20px space above and below */
+        }
+        
+        /* Map Section */
+        .map-section {
+            text-align: center; /* Center-align map heading and map container */
+            margin: 40px 0; /* Top and bottom margins */
+        }
+        
+        .map-heading {
+            font-size: 24px; /* Size of the MAP heading */
+            color: white; /* Heading color */
+            margin-bottom: 20px; /* Space below the heading */
+        }
+        
+        .map-container {
+            width: 100%;
+            max-width: 800px; /* Max width for large screens */
+            height: 600px; /* Fixed height for the map area */
+            margin: 0 auto; /* Center align the map container */
+            background-color: #f0f0f0; /* Light background color for visualization */
+            border: 2px solid white; /* White border around the map */
+            border-radius: 10px; /* Rounded corners */
+            overflow: hidden; /* Ensure content fits within the container */
+        }
+        
+        /* Footer Styles */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            animation: fadeIn 2s ease;
+        }
+        
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        
+            .logo img {
+                width: 120px; /* Adjust logo size for smaller screens */
+            }
+        
+            .navbar ul {
+                flex-direction: column;
+                gap: 10px; /* Reduce space between menu items */
+            }
+        
+            .navbar ul li {
+                margin-right: 0;
+            }
+        
+            .hero-content {
+                margin: 0 auto;
+                padding: 15px;
+            }
+        
+            .hero-content h2 {
+                font-size: 24px;
+            }
+        
+            .hero-highlight .highlight {
+                font-size: 20px;
+            }
+        
+            .camera-wrapper {
+                border-width: 3px; /* Thinner border for smaller screens */
+                padding: 3px; /* Less padding around the camera */
+            }
+        
+            #camera {
+                max-width: 250px; /* Further reduce maximum width for smaller screens */
+            }
+        
+            .quotes blockquote {
+                max-width: 90%; /* Adjusted width for smaller screens */
+            }
+        
+            .navbar {
+                padding: 10px 0; /* Padding for spacing */
+            }
+        
+            .navbar ul {
+                display: flex;
+                flex-direction: column; /* Stack menu items */
+                align-items: center; /* Center align items */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+        
+            .logo img {
+                width: 100px; /* Further reduce logo size */
+            }
+        
+            .hero-content {
+                padding: 10px;
+            }
+        
+            .hero-content h2 {
+                font-size: 20px; /* Smaller font size */
+            }
+        
+            .camera-wrapper {
+                border-width: 2px; /* Thinner border for extra small screens */
+                padding: 2px; /* Less padding */
+            }
+        
+            #camera {
+                max-width: 200px; /* Further reduce camera width */
+            }
+        
+            .footer p {
+                font-size: 12px; /* Smaller footer text */
+            }
+        
+            .map-heading {
+                font-size: 20px; /* Smaller font size for map heading */
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes fadeInLeft {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+         /* Additional styles for map */
+         #map {
+            width: 100%;
+            height: 600px;
+            border-radius: 10px;
+        }
+        .nav {
+  --color: #ffffff; 
+  background: none;
+  width: 100px;
+  height: 56px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    fill: none;
+    stroke: var(--color);
+    stroke-width: 7px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    use {
+      &:nth-of-type(1) {
+        opacity: 1;
+        stroke-dashoffset: 221;
+        stroke-dasharray: 46 249;
+        transition: stroke-dashoffset .12s linear .2s, stroke-dasharray .12s linear .2s, opacity 0s linear .2s;  
+      }
+      &:nth-of-type(2) {
+        animation: stroke-animation-reverse 1.2s ease-out forwards;
+      } 
+    }
+  }
+  input {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    cursor: pointer;
+    opacity: 0;
+    &:checked {
+      + svg {
+        use {
+          &:nth-of-type(1) {
+            stroke-dashoffset: 175;
+            stroke-dasharray: 0 295;
+            opacity: 0;
+            transition: stroke-dashoffset .07s linear .07s, stroke-dasharray .07s linear .07s, opacity 0s linear .14s;  
+          }
+          &:nth-of-type(2) {
+            animation: stroke-animation 1.2s ease-out forwards;
+          } 
+        }
+      }
+    }
+  }
+}
+
+@keyframes stroke-animation {
+  0% {
+    stroke-dashoffset: 295;
+    stroke-dasharray: 25 270;
+  }
+  50% {
+    stroke-dashoffset: 68;
+    stroke-dasharray: 59 236;
+  }
+  65% {
+    stroke-dashoffset: 59;
+    stroke-dasharray: 59 236;
+  }
+  100% {
+    stroke-dashoffset: 68;
+    stroke-dasharray: 59 236;
+  }
+}
+
+@keyframes stroke-animation-reverse {
+  0% {
+    stroke-dashoffset: 68;
+    stroke-dasharray: 59 236;
+  }
+  50% {
+    stroke-dashoffset: 290;
+    stroke-dasharray: 25 270;
+  }
+  65% {
+    stroke-dashoffset: 295;
+    stroke-dasharray: 25 270;
+  }
+  100% {
+    stroke-dashoffset: 290;
+    stroke-dasharray: 25 270;
+  }
+}
+
+.nav {
+    height: 50px;
+    font: 400 16px 'Varela Round', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+}
+
+.toggle-content {
+    display: none; /* Initially hide the headings */
+}
+
+input[type="checkbox"]:checked ~ .menu .toggle-content {
+    display: block; /* Show headings when the checkbox is checked */
+}
+
+.menu {
+    display: none; /* Hide the menu by default */
+}
+
+input[type="checkbox"]{
+    display: block; /* Show the menu when the checkbox is checked */
+}
+
+video, #tempImage {
+            display: none; /* Hide both initially */
+
+        }
+        .status-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    .status-item {
+        text-align: center;
+        margin: 10px 0;
+        transition: transform 0.2s;
+    }
+    .status-item:hover {
+        transform: scale(1.05);
+    }
+    .status-circle {
+        width: 50px; 
+        height: 50px; 
+        border-radius: 50%; 
+        margin-bottom: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    span {
+        font-weight: bold;
+        color: #333;
+    }
+    </style>
+</head>
+
+
+<body>
+
+
+
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="https://www.sih.gov.in/img1/logo/SIH_logo_2024_horizontal.png" alt="Smart India Hackathon 2024 Logo">
+            </div>
+            <nav class="navbar" aria-placeholder="right">
+                <ul>
+                    
+                    <li><a href="#">Camera</a></li>
+                    
+                    <li><a href="#">Map</a></li>
+                    
+                    <li><a href="#">Contact Us</a></li>
+                    
+                </ul>
+            </nav>
+            <div class="contact-info">
+                <a href="#" class="contact-button">Contact NGO's</a>
+            </div>
+        </div>
+        <div class="nav">
+            <input type="checkbox" id="menu-toggle" />
+            <svg>
+                <use xlink:href="#menu" />
+                <use xlink:href="#menu" />
+            </svg>
+        </div>
+        
+        
+        
+          
+    
+    
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Solution for waste segregation, disposal and further process with minimum human interventions.</h2>
+        </div>
+    </section>
+
+    <!-- Highlight Section -->
+    <div class="hero-highlight">
+        <h3 class="highlight">Team Nirvana  |  2024</h3>
+        <div class="underline"></div> <!-- White line below the text -->
+    </div>
+
+    <!-- Camera Section -->
+    <section class="camera-section">
+        <div class="camera-wrapper">
+            <img id="tempImage" src="temp.jpg" alt="Temporary Image">
+        </div>
+        <button id="cameraButton">Enable Camera</button>
+    </section>
+    
+    
+    
+     <!-- Quotes Section -->
+    <div class="quotes">
+        <blockquote>
+            <div class="status-circle" style="background-color: yellow;"></div>
+            <span class="abcq1">Trash Detected</span>
+        </blockquote>
+        <blockquote>
+            
+                <div class="status-circle" style="background-color: red;"></div>
+                <span>Too Much Trash</span>
+            
+        </blockquote>
+        <blockquote>
+            <div class="status-circle" style="background-color: green;"></div>
+            <span>Recently Cleaned</span>
+        </blockquote>
+        <div class="quotes-footer">
+            <div class="underline"></div> <!-- White line -->
+        </div>
+
+
+    <section class="map-section">
+        <h2 class="map-heading">MAP</h2> <!-- MAP heading -->
+        <div id="map" class="map-container"></div> <!-- Placeholder for map -->
+    </section>
+
+    
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Team Nirvana. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Camera Access -->
+    <script>
+// Initialize the map outside the button logic
+const map = L.map('map').setView([20.5937, 78.9629], 5); // Default view over India
+
+// Load and display tile layer
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// Function to get user location and add the yellow marker
+function getLocationAndAddMarker() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            // Create a yellow circle at the user's location
+            L.circle([lat, lon], {
+                color: 'yellow',
+                fillColor: '#ffff00',
+                fillOpacity: 0.5,
+                radius: 50 // Adjust radius as needed
+            }).addTo(map).bindPopup("Trash Location").openPopup();
+
+            // Set the map view to the user's location
+            map.setView([lat, lon], 13);
+        }, function() {
+            alert("Unable to retrieve your location.");
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+// Event listener for the camera button
+document.getElementById('cameraButton').addEventListener('click', function() {
+    const video = document.getElementById('camera');
+    const tempImage = document.getElementById('tempImage');
+    getLocationAndAddMarker();
+    // Show the temporary image
+    tempImage.style.display = 'block';
+    video.style.display = 'none'; // Ensure video is hidden initially
+
+    // Start the camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            video.srcObject = stream;
+            video.style.display = 'block'; // Show the video feed
+            tempImage.style.display = 'none'; // Hide the temporary image
+
+            // Call the function to get the location and add the marker
+            
+        })
+        .catch(function(error) {
+            console.error('Error accessing the camera:', error);
+            alert("Unable to access the camera. Please check your permissions.");
+        });
+});
+
+document.getElementById('menu-toggle').addEventListener('change', function() {
+    const headings = document.querySelectorAll('.toggle-content');
+    headings.forEach(heading => {
+        heading.style.display = this.checked ? 'block' : 'none';
+    });
+});
+
+
+    </script>
+</body>
+</html>
